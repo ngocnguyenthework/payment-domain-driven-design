@@ -21,7 +21,7 @@ async function bootstrap() {
   app.use(compression());
 
   await app.listen(configService.port, () => {
-    console.log('Server running on port:::', configService.port);
+    console.log('Server running on port:::  ', configService.port);
   });
 }
 
