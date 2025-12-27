@@ -13,9 +13,9 @@ export class PaymentResponseMapper extends ResponseMapper<Payment, PaymentRespon
       status: entity.status,
       customerId: entity.customerId,
       description: entity.description,
-      metadata: entity.metadata?.props,
-      createdAt: entity.props.createdAt as Date,
-      updatedAt: entity.props.updatedAt as Date,
+      metadata: entity.metadata?.['props'],
+      createdAt: entity.createdAt as Date,
+      updatedAt: entity.updatedAt as Date,
     };
   }
 }

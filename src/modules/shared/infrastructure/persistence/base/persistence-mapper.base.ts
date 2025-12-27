@@ -3,7 +3,7 @@ import type {
   IEntity,
   ILoadedEntity,
   IPersistedEntity,
-} from '@/payment/shared/domain/types/domain-entity.type';
+} from '@/modules/shared/domain/types/domain-entity.type';
 import type { IMapper, MappingOptions } from '../types/persistence-mapper.type';
 
 export abstract class BaseMapper<

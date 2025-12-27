@@ -1,56 +1,87 @@
-import { BaseEntity } from '@/modules/shared/domain/base/domain-entity.base';
+import { AggregateRoot as NestAggregateRoot } from '@nestjs/cqrs';
 import { Money } from '../value-objects/money.vo';
 import { PaymentStatus } from '../enums/payment-status.enum';
 import { PaymentMetadata } from '../value-objects/payment-metadata.vo';
 
-export interface PaymentProps {
-  id: string | null;
-  amount: Money;
-  status: PaymentStatus;
-  customerId: string;
-  description?: string;
-  metadata?: PaymentMetadata;
-  createdAt: Date | null;
-  updatedAt: Date | null;
-}
+export class Payment extends NestAggregateRoot {
+  private _id: string | null;
+  private _amount: Money;
+  private _status: PaymentStatus;
+  private _customerId: string;
+  private _description: string | undefined;
+  private _metadata: PaymentMetadata | undefined;
+  private _createdAt: Date | null;
+  private _updatedAt: Date | null;
 
-export class Payment extends BaseEntity<PaymentProps> {
+  get id(): string | null {
+    return this._id;
+  }
+
   get amount(): Money {
-    return this.props.amount;
+    return this._amount;
   }
 
   get status(): PaymentStatus {
-    return this.props.status;
+    return this._status;
   }
 
   get customerId(): string {
-    return this.props.customerId;
+    return this._customerId;
   }
 
   get description(): string | undefined {
-    return this.props.description;
+    return this._description;
   }
 
   get metadata(): PaymentMetadata | undefined {
-    return this.props.metadata;
+    return this._metadata;
+  }
+
+  get createdAt(): Date | null {
+    return this._createdAt;
+  }
+
+  get updatedAt(): Date | null {
+    return this._updatedAt;
+  }
+
+  private constructor(data: {
+    id: string | null;
+    amount: Money;
+    status: PaymentStatus;
+    customerId: string;
+    description?: string;
+    metadata?: PaymentMetadata;
+    createdAt: Date | null;
+    updatedAt: Date | null;
+  }) {
+    super();
+    this._id = data.id;
+    this._amount = data.amount;
+    this._status = data.status;
+    this._customerId = data.customerId;
+    this._description = data.description;
+    this._metadata = data.metadata;
+    this._createdAt = data.createdAt;
+    this._updatedAt = data.updatedAt;
   }
 
   // Domain Logic: Complete payment
   public complete(): void {
-    if (this.props.status !== PaymentStatus.PENDING) {
+    if (this._status !== PaymentStatus.PENDING) {
       throw new Error('Can only complete pending payments');
     }
-    this.props.status = PaymentStatus.COMPLETED;
-    this.props.updatedAt = new Date();
+    this._status = PaymentStatus.COMPLETED;
+    this._updatedAt = new Date();
   }
 
   // Domain Logic: Fail payment
   public fail(): void {
-    if (this.props.status !== PaymentStatus.PENDING) {
+    if (this._status !== PaymentStatus.PENDING) {
       throw new Error('Can only fail pending payments');
     }
-    this.props.status = PaymentStatus.FAILED;
-    this.props.updatedAt = new Date();
+    this._status = PaymentStatus.FAILED;
+    this._updatedAt = new Date();
   }
 
   // Factory Method: Create new payment
@@ -74,16 +105,25 @@ export class Payment extends BaseEntity<PaymentProps> {
   }
 
   // Factory Method: Reconstitute from persistence
-  public static load(data: PaymentProps): Payment {
-    return new Payment(data);
-  }
-
-  // Override to satisfy BaseEntity abstract type
-  static create(_props: unknown): unknown {
-    throw new Error('Use Payment.create() with proper arguments');
-  }
-
-  static load(_props: unknown): unknown {
-    throw new Error('Use Payment.load() with proper arguments');
+  public static load(data: {
+    id: string;
+    amount: Money;
+    status: PaymentStatus;
+    customerId: string;
+    description?: string;
+    metadata?: PaymentMetadata;
+    createdAt: Date;
+    updatedAt: Date;
+  }): Payment {
+    return new Payment({
+      id: data.id,
+      amount: data.amount,
+      status: data.status,
+      customerId: data.customerId,
+      description: data.description,
+      metadata: data.metadata,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
+    });
   }
 }
