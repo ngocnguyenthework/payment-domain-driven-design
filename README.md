@@ -1,4 +1,4 @@
-# Payment Domain-Driven Design
+# Domain-Driven Design
 
 A showcase implementation of **Domain-Driven Design (DDD)** patterns in a NestJS application. This project demonstrates how to structure a backend application using DDD principles, Clean Architecture, and CQRS to build maintainable, scalable enterprise software.
 
