@@ -13,10 +13,7 @@ export abstract class BaseEntity<
     super();
   }
 
-  equals(entity?: BaseEntity<T>): boolean {
-    if (!entity) {
-      return false;
-    }
+  equals(entity: BaseEntity<T>): boolean {
     if (this === entity) {
       return true;
     }

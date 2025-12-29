@@ -90,7 +90,7 @@ export abstract class BaseMapper<
     options: MappingOptions = {},
   ): PersistenceEntity {
     const persistence = new PersistenceClass();
-    let persistenceKeys = this._getEntityKeys(persistence, true);
+    let persistenceKeys = this._getEntityKeys(persistence, !domain.id);
 
     const { include = [], exclude = [] } = options;
 
